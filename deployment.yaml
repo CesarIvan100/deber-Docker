@@ -1,0 +1,43 @@
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: cristian
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: appcb-deployment
+  namespace: cristian
+  labels:  # Cambiado de 'label' a 'labels'
+    app: appcb
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: appcb
+  template:
+    metadata:
+      labels:
+        app: appcb
+    spec:
+      containers:
+      - name: appcb-container
+        image: cristianbustos/appcb:2
+        ports:
+        - containerPort: 5000
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: appcb-service
+  namespace: cristian
+  labels:  # Cambiado de 'label' a 'labels'
+    app: appcb
+spec:
+  selector: 
+    app: appcb
+  ports:
+    - protocol: TCP
+      port: 5000
+      targetPort: 5000
+  type: ClusterIP
